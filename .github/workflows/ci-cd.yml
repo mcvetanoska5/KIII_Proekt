@@ -35,21 +35,8 @@ jobs:
       # Push Docker image
       - name: Push Docker Image
         run: docker push mmcc123/lab:latest
-      # Set up kubectl
+      # (Optional) Set up kubectl 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'v1.29.0'
-      # Configure kubeconfig
-      - name: Configure kubeconfig
-        run: echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-      - name: Set KUBECONFIG env
-        run: echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
-      # Deploy to Kubernetes
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f ./lab/kubernetes/namespace.yaml
-          kubectl apply -f ./lab/kubernetes/deployment-db.yaml -n event-booking
-          kubectl apply -f ./lab/kubernetes/deployment-app.yaml -n event-booking
-          kubectl apply -f ./lab/kubernetes/service-db.yaml -n event-booking
-          kubectl apply -f ./lab/kubernetes/service-app.yaml -n event-booking
